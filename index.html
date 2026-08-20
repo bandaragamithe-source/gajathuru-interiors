@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAJATHURU INTERIORS — Custom Furniture Designed for Your Space</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <span class="logo-icon"><i class="fas fa-couch"></i></span>
+                <div class="logo-text">
+                    <span class="logo-main">GAJATHURU</span>
+                    <span class="logo-sub">INTERIORS</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#categories" class="nav-link">Furniture</a></li>
+                <li><a href="#builder" class="nav-link">Customize</a></li>
+                <li><a href="#about" class="nav-link">About Us</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#builder" class="nav-link nav-cta"><i class="fab fa-whatsapp"></i> Order Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-tagline">Custom Furniture Designed for Your Space</p>
+            <h1 class="hero-title">Design Your <span class="highlight">Dream Furniture</span></h1>
+            <p class="hero-desc">Choose your furniture, customize the size and design, and send your requirements directly to us for a personalized quotation.</p>
+            <div class="hero-buttons">
+                <a href="#categories" class="btn btn-primary"><i class="fas fa-chair"></i> Explore Furniture</a>
+                <a href="#builder" class="btn btn-secondary"><i class="fas fa-paint-brush"></i> Customize Now</a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#categories"><i class="fas fa-chevron-down"></i></a>
+        </div>
+    </section>
+
+    <!-- ==================== FURNITURE CATEGORIES ==================== -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Our Collection</span>
+                <h2 class="section-title">Furniture Categories</h2>
+                <p class="section-desc">Browse our premium furniture categories and customize them to fit your space perfectly.</p>
+            </div>
+
+            <div class="categories-grid">
+                <div class="category-card" data-category="sofa">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" alt="Sofa" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('sofa')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-couch"></i> Sofa</h3>
+                        <p>Comfortable, stylish sofas tailored to your living room.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="bed">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop" alt="Bed" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('bed')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-bed"></i> Bed</h3>
+                        <p>Luxurious beds designed for restful sleep and elegance.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="wardrobe">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&h=300&fit=crop" alt="Wardrobe" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('wardrobe')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-door-closed"></i> Wardrobe</h3>
+                        <p>Spacious wardrobes with smart storage solutions.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="dining-table">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&h=300&fit=crop" alt="Dining Table" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('dining-table')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-utensils"></i> Dining Table</h3>
+                        <p>Elegant dining tables for memorable gatherings.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="tv-cabinet">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=300&fit=crop" alt="TV Cabinet" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('tv-cabinet')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-tv"></i> TV Cabinet</h3>
+                        <p>Modern TV units that complement your entertainment space.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="office-table">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop" alt="Office Table" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('office-table')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-briefcase"></i> Office Table</h3>
+                        <p>Professional desks for productive workspaces.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="kitchen-cabinet">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop" alt="Kitchen Cabinet" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('kitchen-cabinet')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-blender"></i> Kitchen Cabinet</h3>
+                        <p>Functional kitchen cabinets for organized cooking.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="custom">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=300&fit=crop" alt="Custom Furniture" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('custom')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-pencil-ruler"></i> Custom Furniture</h3>
+                        <p>Have something unique in mind? We can build it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CUSTOM FURNITURE BUILDER ==================== -->
+    <section class="builder" id="builder">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Design Studio</span>
+                <h2 class="section-title">Custom Furniture Builder</h2>
+                <p class="section-desc">Follow the steps below to design your perfect furniture piece.</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Furniture</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>Size</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span>Material</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <span>Color</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-number">5</div>
+                    <span>Features</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="6">
+                    <div class="step-number">6</div>
+                    <span>Details</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="7">
+                    <div class="step-number">7</div>
+                    <span>Review</span>
+                </div>
+            </div>
+
+            <div class="builder-wrapper">
+                <!-- Preview Panel -->
+                <div class="preview-panel">
+                    <div class="preview-card">
+                        <h3><i class="fas fa-eye"></i> Design Preview</h3>
+                        <div class="preview-visual" id="previewVisual">
+                            <div class="preview-furniture" id="previewFurniture">
+                                <i class="fas fa-couch"></i>
+                            </div>
+                            <div class="preview-dimensions" id="previewDimensions">
+                                <span class="dim-width">W: --</span>
+                                <span class="dim-height">H: --</span>
+                                <span class="dim-depth">D: --</span>
+                            </div>
+                        </div>
+                        <div class="preview-details" id="previewDetails">
+                            <div class="preview-row"><span>Furniture:</span> <strong id="p-furniture">Not selected</strong></div>
+                            <div class="preview-row"><span>Size:</span> <strong id="p-size">--</strong></div>
+                            <div class="preview-row"><span>Material:</span> <strong id="p-material">--</strong></div>
+                            <div class="preview-row"><span>Color:</span> <strong id="p-color">--</strong></div>
+                            <div class="preview-row"><span>Features:</span> <strong id="p-features">--</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Panel -->
+                <div class="form-panel">
+                    <form id="customForm" onsubmit="return false;">
+
+                        <!-- Step 1: Select Furniture -->
+                        <div class="form-step active" data-step="1">
+                            <h3><i class="fas fa-couch"></i> Step 1 — Select Furniture</h3>
+                            <p class="step-desc">Choose the type of furniture you want to customize.</p>
+
+                            <div class="furniture-options">
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Sofa" data-icon="fa-couch">
+                                    <div class="option-card">
+                                        <i class="fas fa-couch"></i>
+                                        <span>Sofa</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Bed" data-icon="fa-bed">
+                                    <div class="option-card">
+                                        <i class="fas fa-bed"></i>
+                                        <span>Bed</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Wardrobe" data-icon="fa-door-closed">
+                                    <div class="option-card">
+                                        <i class="fas fa-door-closed"></i>
+                                        <span>Wardrobe</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Dining Table" data-icon="fa-utensils">
+                                    <div class="option-card">
+                                        <i class="fas fa-utensils"></i>
+                                        <span>Dining Table</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="TV Cabinet" data-icon="fa-tv">
+                                    <div class="option-card">
+                                        <i class="fas fa-tv"></i>
+                                        <span>TV Cabinet</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Office Table" data-icon="fa-briefcase">
+                                    <div class="option-card">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>Office Table</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Kitchen Cabinet" data-icon="fa-blender">
+                                    <div class="option-card">
+                                        <i class="fas fa-blender"></i>
+                                        <span>Kitchen Cabinet</span>
+                                    </div>
+                                </label>
+                                <label class="furniture-option">
+                                    <input type="radio" name="furniture" value="Custom Furniture" data-icon="fa-pencil-ruler">
+                                    <div class="option-card">
+                                        <i class="fas fa-pencil-ruler"></i>
+                                        <span>Custom</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-primary next-step" disabled>Next Step <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Enter Size -->
+                        <div class="form-step" data-step="2">
+                            <h3><i class="fas fa-ruler-combined"></i> Step 2 — Enter Custom Size</h3>
+                            <p class="step-desc">Specify the exact dimensions you need.</p>
+
+                            <div class="unit-selector">
+                                <span>Unit:</span>
+                                <label><input type="radio" name="unit" value="ft" checked> Feet</label>
+                                <label><input type="radio" name="unit" value="in"> Inches</label>
+                                <label><input type="radio" name="unit" value="cm"> Centimeters</label>
+                            </div>
+
+                            <div class="size-inputs">
+                                <div class="input-group">
+                                    <label for="width">Width <span class="unit-label">(ft)</span></label>
+                                    <input type="number" id="width" name="width" min="0.1" step="0.1" placeholder="e.g. 6" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="height">Height <span class="unit-label">(ft)</span></label>
+                                    <input type="number" id="height" name="height" min="0.1" step="0.1" placeholder="e.g. 7" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="depth">Depth <span class="unit-label">(ft)</span></label>
+                                    <input type="number" id="depth" name="depth" min="0.1" step="0.1" placeholder="e.g. 2" required>
+                                </div>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button type="button" class="btn btn-primary next-step">Next Step <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Select Material -->
+                        <div class="form-step" data-step="3">
+                            <h3><i class="fas fa-layer-group"></i> Step 3 — Select Material</h3>
+                            <p class="step-desc">Choose the material for your furniture.</p>
+
+                            <div class="material-options">
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="MDF">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #d4c5a9;"></div>
+                                        <span>MDF</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Plywood">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #c4a882;"></div>
+                                        <span>Plywood</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Teak Wood">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #8b6914;"></div>
+                                        <span>Teak Wood</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Mahogany">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #6b2d2d;"></div>
+                                        <span>Mahogany</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Pine Wood">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #e8d5a3;"></div>
+                                        <span>Pine Wood</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Melamine">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: #f5f5f0;"></div>
+                                        <span>Melamine</span>
+                                    </div>
+                                </label>
+                                <label class="material-option">
+                                    <input type="radio" name="material" value="Other">
+                                    <div class="option-card material-card">
+                                        <div class="material-swatch" style="background: linear-gradient(45deg, #ccc, #eee);"></div>
+                                        <span>Other</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button type="button" class="btn btn-primary next-step" disabled>Next Step <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Select Color -->
+                        <div class="form-step" data-step="4">
+                            <h3><i class="fas fa-palette"></i> Step 4 — Select Color / Finish</h3>
+                            <p class="step-desc">Pick a color or finish for your furniture.</p>
+
+                            <div class="color-options">
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="White">
+                                    <div class="color-swatch" style="background: #ffffff; border: 2px solid #ddd;"></div>
+                                    <span>White</span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="Black">
+                                    <div class="color-swatch" style="background: #1a1a1a;"></div>
+                                    <span>Black</span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="Brown">
+                                    <div class="color-swatch" style="background: #8b5a2b;"></div>
+                                    <span>Brown</span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="Natural Wood">
+                                    <div class="color-swatch" style="background: #c9a96e;"></div>
+                                    <span>Natural Wood</span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="Grey">
+                                    <div class="color-swatch" style="background: #808080;"></div>
+                                    <span>Grey</span>
+                                </label>
+                                <label class="color-option custom-color-option">
+                                    <input type="radio" name="color" value="custom" id="customColorRadio">
+                                    <div class="color-swatch custom-swatch"><i class="fas fa-plus"></i></div>
+                                    <span>Custom</span>
+                                </label>
+                            </div>
+
+                            <div class="custom-color-picker" id="customColorPicker" style="display:none;">
+                                <label for="customColorInput">Choose your custom color:</label>
+                                <input type="color" id="customColorInput" value="#4a90d9">
+                                <span id="customColorValue">#4A90D9</span>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button type="button" class="btn btn-primary next-step" disabled>Next Step <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Additional Features -->
+                        <div class="form-step" data-step="5">
+                            <h3><i class="fas fa-sliders-h"></i> Step 5 — Additional Features</h3>
+                            <p class="step-desc">Add specific features based on your furniture type.</p>
+
+                            <div class="features-container" id="featuresContainer">
+                                <!-- Dynamic features will be injected here -->
+                                <div class="feature-placeholder">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>Please select a furniture type in Step 1 to see available features.</p>
+                                </div>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button type="button" class="btn btn-primary next-step">Next Step <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Reference Image & Customer Details -->
+                        <div class="form-step" data-step="6">
+                            <h3><i class="fas fa-user"></i> Step 6 — Your Details & Reference</h3>
+                            <p class="step-desc">Upload a reference image and provide your contact information.</p>
+
+                            <!-- Reference Image Upload -->
+                            <div class="upload-section">
+                                <h4><i class="fas fa-image"></i> Have a Design in Mind?</h4>
+                                <p>Upload a reference image and we will help create a similar custom design.</p>
+                                <div class="upload-area" id="uploadArea">
+                                    <input type="file" id="referenceImage" accept="image/*" hidden>
+                                    <div class="upload-placeholder" id="uploadPlaceholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Click or drag image here</span>
+                                    </div>
+                                    <img id="uploadPreview" class="upload-preview" alt="Preview" style="display:none;">
+                                    <button type="button" class="btn btn-small btn-outline remove-image" id="removeImage" style="display:none;"><i class="fas fa-trash"></i> Remove</button>
+                                </div>
+                            </div>
+
+                            <!-- Customer Details -->
+                            <div class="customer-form">
+                                <h4><i class="fas fa-address-card"></i> Customer Information</h4>
+
+                                <div class="input-group">
+                                    <label for="fullName">Full Name <span class="required">*</span></label>
+                                    <input type="text" id="fullName" name="fullName" placeholder="John Silva" required>
+                                    <span class="error-msg" id="nameError">Please enter your full name</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="phone">WhatsApp Number <span class="required">*</span></label>
+                                    <input type="tel" id="phone" name="phone" placeholder="0771234567" required>
+                                    <span class="error-msg" id="phoneError">Please enter a valid phone number</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="email">Email Address <span class="optional">(Optional)</span></label>
+                                    <input type="email" id="email" name="email" placeholder="john@example.com">
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="address">Address <span class="required">*</span></label>
+                                    <input type="text" id="address" name="address" placeholder="No. 123, Main Street" required>
+                                    <span class="error-msg" id="addressError">Please enter your address</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="city">City <span class="required">*</span></label>
+                                    <input type="text" id="city" name="city" placeholder="Negombo" required>
+                                    <span class="error-msg" id="cityError">Please enter your city</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="notes">Additional Requirements / Notes</label>
+                                    <textarea id="notes" name="notes" rows="3" placeholder="Any special requirements..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button type="button" class="btn btn-primary next-step">Review Order <i class="fas fa-check"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 7: Order Summary -->
+                        <div class="form-step" data-step="7">
+                            <h3><i class="fas fa-clipboard-check"></i> Step 7 — Order Summary</h3>
+                            <p class="step-desc">Review your complete order before sending.</p>
+
+                            <div class="summary-card" id="summaryCard">
+                                <div class="summary-header">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <h4>CUSTOM FURNITURE ORDER</h4>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h5><i class="fas fa-couch"></i> Furniture Item</h5>
+                                    <p id="sum-furniture">--</p>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h5><i class="fas fa-ruler-combined"></i> Size Details</h5>
+                                    <div class="summary-grid" id="sum-size">
+                                        <span>Width: --</span>
+                                        <span>Height: --</span>
+                                        <span>Depth: --</span>
+                                    </div>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h5><i class="fas fa-palette"></i> Design Details</h5>
+                                    <div class="summary-grid" id="sum-design">
+                                        <span>Material: --</span>
+                                        <span>Color: --</span>
+                                    </div>
+                                    <div id="sum-features" class="summary-features"></div>
+                                </div>
+
+                                <div class="summary-section" id="sum-reference-section" style="display:none;">
+                                    <h5><i class="fas fa-image"></i> Reference Image</h5>
+                                    <p>Customer has uploaded a reference design.</p>
+                                    <img id="sum-reference-img" class="sum-ref-img" alt="Reference">
+                                </div>
+
+                                <div class="summary-section">
+                                    <h5><i class="fas fa-user"></i> Customer Details</h5>
+                                    <div class="summary-grid" id="sum-customer">
+                                        <span>Name: --</span>
+                                        <span>Phone: --</span>
+                                        <span>Email: --</span>
+                                        <span>Address: --</span>
+                                    </div>
+                                </div>
+
+                                <div class="summary-section" id="sum-notes-section" style="display:none;">
+                                    <h5><i class="fas fa-sticky-note"></i> Additional Notes</h5>
+                                    <p id="sum-notes">--</p>
+                                </div>
+                            </div>
+
+                            <div class="form-nav summary-nav">
+                                <button type="button" class="btn btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+                                <a href="#" class="btn btn-whatsapp" id="sendWhatsAppBtn" target="_blank">
+                                    <i class="fab fa-whatsapp"></i> Send Order via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT SECTION ==================== -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=700&fit=crop" alt="About GAJATHURU INTERIORS" loading="lazy">
+                    <div class="about-badge">
+                        <span class="badge-number">15+</span>
+                        <span class="badge-text">Years of<br>Excellence</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-label">About Us</span>
+                    <h2 class="section-title">About GAJATHURU INTERIORS</h2>
+                    <p class="about-text">We specialize in creating high-quality custom furniture designed specifically for your space, lifestyle, and requirements. From modern wardrobes and stylish sofas to complete interior solutions, we turn your ideas into reality.</p>
+
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="feature-icon"><i class="fas fa-drafting-compass"></i></div>
+                            <div class="feature-text">
+                                <h4>Custom Designs</h4>
+                                <p>Every piece is uniquely designed to match your vision and space requirements.</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                            <div class="feature-text">
+                                <h4>Quality Materials</h4>
+                                <p>We use only premium-grade woods, fabrics, and finishes for lasting durability.</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon"><i class="fas fa-hammer"></i></div>
+                            <div class="feature-text">
+                                <h4>Professional Craftsmanship</h4>
+                                <p>Expert artisans with decades of experience in fine furniture making.</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                            <div class="feature-text">
+                                <h4>Personalized Service</h4>
+                                <p>From design to delivery, we work closely with you every step of the way.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT SECTION ==================== -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Get in Touch</span>
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-desc">Have questions? Reach out to us through any of the channels below.</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                    <h4>WhatsApp</h4>
+                    <p>Quick responses for inquiries & orders</p>
+                    <a href="https://wa.me/947XXXXXXXX" class="contact-link" target="_blank">+94 7X XXX XXXX</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h4>Phone</h4>
+                    <p>Call us during business hours</p>
+                    <a href="tel:+947XXXXXXXX" class="contact-link">+94 7X XXX XXXX</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h4>Email</h4>
+                    <p>Send us detailed requirements</p>
+                    <a href="mailto:info@gajathuruinteriors.com" class="contact-link">info@gajathuruinteriors.com</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h4>Location</h4>
+                    <p>Visit our showroom</p>
+                    <span class="contact-link">Negombo, Sri Lanka</span>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" class="social-btn facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-btn instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-btn whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+
+            <div class="cta-banner">
+                <div class="cta-content">
+                    <h3>Ready to Design Your Furniture?</h3>
+                    <p>Get started now and receive a personalized quotation within 24 hours.</p>
+                </div>
+                <a href="#builder" class="btn btn-primary"><i class="fab fa-whatsapp"></i> Start Your Order</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i class="fas fa-couch"></i>
+                        <div>
+                            <span class="footer-logo-main">GAJATHURU</span>
+                            <span class="footer-logo-sub">INTERIORS</span>
+                        </div>
+                    </div>
+                    <p class="footer-tagline">Custom Furniture Designed for Your Space</p>
+                    <p class="footer-desc">Creating beautiful, functional, and personalized furniture pieces that transform your living and working spaces.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#categories">Furniture</a></li>
+                        <li><a href="#builder">Customize</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#categories">Sofas</a></li>
+                        <li><a href="#categories">Beds</a></li>
+                        <li><a href="#categories">Wardrobes</a></li>
+                        <li><a href="#categories">Dining Tables</a></li>
+                        <li><a href="#categories">Office Furniture</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Negombo, Sri Lanka</p>
+                    <p><i class="fas fa-phone"></i> +94 7X XXX XXXX</p>
+                    <p><i class="fas fa-envelope"></i> info@gajathuruinteriors.com</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 GAJATHURU INTERIORS. All Rights Reserved.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== FLOATING WHATSAPP BUTTON ==================== -->
+    <a href="https://wa.me/947XXXXXXXX" class="floating-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="floating-tooltip">Chat with us</span>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
