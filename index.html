@@ -66,11 +66,109 @@
                 <p class="section-desc">Browse our premium furniture categories and customize them to fit your space perfectly.</p>
             </div>
 
-            <div class="categories-grid" id="categoriesGrid">
-                <!-- Furniture loaded dynamically from Firestore -->
-                <div class="category-loading" id="categoriesLoading">
-                    <div class="spinner"></div>
-                    <p>Loading furniture collection...</p>
+            <div class="categories-grid">
+                <div class="category-card" data-category="sofa">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop" alt="Sofa" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('sofa')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-couch"></i> Sofa</h3>
+                        <p>Comfortable, stylish sofas tailored to your living room.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="bed">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop" alt="Bed" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('bed')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-bed"></i> Bed</h3>
+                        <p>Luxurious beds designed for restful sleep and elegance.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="wardrobe">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&h=300&fit=crop" alt="Wardrobe" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('wardrobe')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-door-closed"></i> Wardrobe</h3>
+                        <p>Spacious wardrobes with smart storage solutions.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="dining-table">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&h=300&fit=crop" alt="Dining Table" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('dining-table')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-utensils"></i> Dining Table</h3>
+                        <p>Elegant dining tables for memorable gatherings.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="tv-cabinet">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=300&fit=crop" alt="TV Cabinet" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('tv-cabinet')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-tv"></i> TV Cabinet</h3>
+                        <p>Modern TV units that complement your entertainment space.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="office-table">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop" alt="Office Table" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('office-table')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-briefcase"></i> Office Table</h3>
+                        <p>Professional desks for productive workspaces.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="kitchen-cabinet">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop" alt="Kitchen Cabinet" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('kitchen-cabinet')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-blender"></i> Kitchen Cabinet</h3>
+                        <p>Functional kitchen cabinets for organized cooking.</p>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="custom">
+                    <div class="category-img">
+                        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=300&fit=crop" alt="Custom Furniture" loading="lazy">
+                        <div class="category-overlay">
+                            <button class="btn btn-small" onclick="selectCategory('custom')">Customize</button>
+                        </div>
+                    </div>
+                    <div class="category-info">
+                        <h3><i class="fas fa-pencil-ruler"></i> Custom Furniture</h3>
+                        <p>Have something unique in mind? We can build it.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -586,28 +684,28 @@
                     <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
                     <h4>WhatsApp</h4>
                     <p>Quick responses for inquiries & orders</p>
-                    <a href="#" class="contact-link" id="contactWhatsapp" target="_blank">+94 78 972 0335</a>
+                    <a href="https://wa.me/94789720335" class="contact-link" target="_blank">+94 78 972 0335</a>
                 </div>
 
                 <div class="contact-card">
                     <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
                     <h4>Phone</h4>
                     <p>Call us during business hours</p>
-                    <a href="#" class="contact-link" id="contactPhone">+94 78 972 0335</a>
+                    <a href="tel:+94789720335" class="contact-link">+94 78 972 0335</a>
                 </div>
 
                 <div class="contact-card">
                     <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                     <h4>Email</h4>
                     <p>Send us detailed requirements</p>
-                    <a href="#" class="contact-link" id="contactEmail">info@gajathuruinteriors.com</a>
+                    <a href="mailto:info@gajathuruinteriors.com" class="contact-link">info@gajathuruinteriors.com</a>
                 </div>
 
                 <div class="contact-card">
                     <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                     <h4>Location</h4>
                     <p>Visit our showroom</p>
-                    <span class="contact-link" id="contactAddress">Negombo, Sri Lanka</span>
+                    <span class="contact-link">Negombo, Sri Lanka</span>
                 </div>
             </div>
 
@@ -668,8 +766,8 @@
                 <div class="footer-contact">
                     <h4>Contact Info</h4>
                     <p><i class="fas fa-map-marker-alt"></i> Negombo, Sri Lanka</p>
-                    <p><i class="fas fa-phone"></i> <span id="footerPhone">+94 78 972 0335</span></p>
-                    <p><i class="fas fa-envelope"></i> <span id="footerEmail">info@gajathuruinteriors.com</span></p>
+                    <p><i class="fas fa-phone"></i> +94 78 972 0335</p>
+                    <p><i class="fas fa-envelope"></i> info@gajathuruinteriors.com</p>
                 </div>
             </div>
 
@@ -685,12 +783,11 @@
     </footer>
 
     <!-- ==================== FLOATING WHATSAPP BUTTON ==================== -->
-    <a href="https://wa.me/94789720335" class="floating-whatsapp" id="floatingWhatsapp" target="_blank" aria-label="Chat on WhatsApp">
+    <a href="https://wa.me/94789720335" class="floating-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="floating-tooltip">Chat with us</span>
     </a>
 
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
