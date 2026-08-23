@@ -1,4 +1,21 @@
 /* ============================================
+   GAJATHURU INTERIORS — Customer Website JavaScript
+   Firebase Integration + Custom Furniture Builder
+   ============================================ */
+
+import { db } from './firebase-config.js';
+import {
+    collection,
+    addDoc,
+    getDocs,
+    getDoc,
+    doc,
+    query,
+    orderBy,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ============================================
    GAJATHURU INTERIORS — Custom Furniture Website
    JavaScript Functionality
    ============================================ */
@@ -6,7 +23,7 @@
 // ============================================
 // CONFIGURATION
 // ============================================
-const BUSINESS_WHATSAPP = "94789720335"; // Replace with actual WhatsApp number
+let BUSINESS_WHATSAPP = "94789720335"; // Fallback WhatsApp number
 
 // ============================================
 // DOM ELEMENTS
@@ -875,12 +892,79 @@ function generateSummary() {
 // ============================================
 
 function generateWhatsAppLink() {
-    const message = buildWhatsAppMessage();
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${BUSINESS_WHATSAPP}?text=${encodedMessage}`;
-
-    sendWhatsAppBtn.href = whatsappUrl;
+    // The actual WhatsApp URL will be set after saving to Firestore
+    sendWhatsAppBtn.href = '#';
 }
+
+// Override the WhatsApp button click to save order first
+sendWhatsAppBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    // Validate required fields one more time
+    if (!orderData.fullName || !orderData.phone || !orderData.address || !orderData.city) {
+        showCustomerToast('Please fill in all required customer details.', 'error');
+        goToStep(6);
+        return;
+    }
+
+    // Show saving overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'order-saving-overlay';
+    overlay.innerHTML = '<div class="spinner"></div><p>Saving your order...</p>';
+    document.body.appendChild(overlay);
+
+    try {
+        // Build the order object
+        const orderPayload = {
+            customerName: orderData.fullName.trim(),
+            customerPhone: orderData.phone.trim(),
+            customerEmail: orderData.email.trim() || '',
+            customerAddress: orderData.address.trim(),
+            customerCity: orderData.city.trim(),
+            furnitureType: orderData.furniture || '',
+            width: orderData.width || '',
+            height: orderData.height || '',
+            depth: orderData.depth || '',
+            unit: orderData.unit || 'ft',
+            material: orderData.material || '',
+            color: orderData.color || '',
+            customColor: orderData.customColor || '',
+            additionalFeatures: orderData.features || {},
+            customerNotes: orderData.notes.trim() || '',
+            referenceImageUploaded: !!orderData.referenceImage,
+            orderStatus: 'New',
+            createdAt: serverTimestamp()
+        };
+
+        // Save to Firestore
+        await addDoc(collection(db, 'orders'), orderPayload);
+
+        // Get WhatsApp number from settings or fallback
+        const settingsDoc = await getDoc(doc(db, 'settings', 'business'));
+        let whatsappNumber = BUSINESS_WHATSAPP;
+        if (settingsDoc.exists() && settingsDoc.data().whatsapp) {
+            whatsappNumber = settingsDoc.data().whatsapp;
+        }
+
+        // Build and open WhatsApp message
+        const message = buildWhatsAppMessage();
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+        showCustomerToast('Order saved successfully! Opening WhatsApp...', 'success');
+
+        // Small delay to show toast
+        setTimeout(() => {
+            window.open(whatsappUrl, '_blank');
+            overlay.remove();
+        }, 800);
+
+    } catch (error) {
+        console.error('Error saving order:', error);
+        overlay.remove();
+        showCustomerToast('Error saving order. Please try again.', 'error');
+    }
+});
 
 function buildWhatsAppMessage() {
     const unit = orderData.unit;
@@ -1032,10 +1116,247 @@ window.addEventListener('scroll', () => {
 // INITIALIZATION
 // ============================================
 
+
+
+// ============================================
+// FIREBASE DATA LOADING
+// ============================================
+
+// Load furniture from Firestore
+async function loadFurnitureFromFirestore() {
+    const grid = document.getElementById('categoriesGrid');
+    const loading = document.getElementById('categoriesLoading');
+
+    try {
+        const q = query(collection(db, 'furniture'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            // Show default categories as fallback
+            renderDefaultCategories();
+            return;
+        }
+
+        // Clear loading
+        grid.innerHTML = '';
+
+        snapshot.forEach(docSnap => {
+            const item = docSnap.data();
+            const card = createFurnitureCard(docSnap.id, item);
+            grid.appendChild(card);
+        });
+
+        // Re-observe new cards for animations
+        grid.querySelectorAll('.category-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+    } catch (error) {
+        console.error('Error loading furniture:', error);
+        renderDefaultCategories();
+    }
+}
+
+function createFurnitureCard(id, item) {
+    const div = document.createElement('div');
+    div.className = 'category-card';
+    div.setAttribute('data-id', id);
+
+    const categoryMap = {
+        'Sofa': 'sofa',
+        'Bed': 'bed',
+        'Wardrobe': 'wardrobe',
+        'Dining Table': 'dining-table',
+        'TV Cabinet': 'tv-cabinet',
+        'Office Table': 'office-table',
+        'Kitchen Cabinet': 'kitchen-cabinet',
+        'Custom Furniture': 'custom'
+    };
+    const catKey = categoryMap[item.category] || 'custom';
+    const iconMap = {
+        'Sofa': 'fa-couch',
+        'Bed': 'fa-bed',
+        'Wardrobe': 'fa-door-closed',
+        'Dining Table': 'fa-utensils',
+        'TV Cabinet': 'fa-tv',
+        'Office Table': 'fa-briefcase',
+        'Kitchen Cabinet': 'fa-blender',
+        'Custom Furniture': 'fa-pencil-ruler'
+    };
+    const icon = iconMap[item.category] || 'fa-couch';
+
+    div.innerHTML = `
+        <div class="category-img">
+            ${item.imageUrl 
+                ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:2rem;\'><i class=\'fas ${icon}\'></i></div>';">`
+                : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:2rem;"><i class="fas ${icon}"></i></div>`
+            }
+            <div class="category-overlay">
+                <button class="btn btn-small btn-select-furniture" data-category="${catKey}" data-name="${escapeHtml(item.name)}">Customize</button>
+            </div>
+        </div>
+        <div class="category-info">
+            <h3><i class="fas ${icon}"></i> ${escapeHtml(item.name)}</h3>
+            <p>${escapeHtml(item.description || 'Custom ' + item.category + ' designed for your space.')}</p>
+            ${item.price ? `<p style="color:var(--accent);font-weight:700;margin-top:6px;font-size:0.9rem;">LKR ${Number(item.price).toLocaleString('en-LK')}</p>` : ''}
+        </div>
+    `;
+
+    // Add click handler for customize button
+    div.querySelector('.btn-select-furniture').addEventListener('click', () => {
+        selectCategory(catKey);
+    });
+
+    return div;
+}
+
+// Fallback: render default categories if Firestore is empty/unavailable
+function renderDefaultCategories() {
+    const grid = document.getElementById('categoriesGrid');
+    const defaults = [
+        { name: 'Sofa', cat: 'sofa', icon: 'fa-couch', desc: 'Comfortable, stylish sofas tailored to your living room.', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop' },
+        { name: 'Bed', cat: 'bed', icon: 'fa-bed', desc: 'Luxurious beds designed for restful sleep and elegance.', img: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop' },
+        { name: 'Wardrobe', cat: 'wardrobe', icon: 'fa-door-closed', desc: 'Spacious wardrobes with smart storage solutions.', img: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&h=300&fit=crop' },
+        { name: 'Dining Table', cat: 'dining-table', icon: 'fa-utensils', desc: 'Elegant dining tables for memorable gatherings.', img: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&h=300&fit=crop' },
+        { name: 'TV Cabinet', cat: 'tv-cabinet', icon: 'fa-tv', desc: 'Modern TV units that complement your entertainment space.', img: 'https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=300&fit=crop' },
+        { name: 'Office Table', cat: 'office-table', icon: 'fa-briefcase', desc: 'Professional desks for productive workspaces.', img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop' },
+        { name: 'Kitchen Cabinet', cat: 'kitchen-cabinet', icon: 'fa-blender', desc: 'Functional kitchen cabinets for organized cooking.', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop' },
+        { name: 'Custom Furniture', cat: 'custom', icon: 'fa-pencil-ruler', desc: 'Have something unique in mind? We can build it.', img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=300&fit=crop' }
+    ];
+
+    grid.innerHTML = defaults.map(d => `
+        <div class="category-card" data-category="${d.cat}">
+            <div class="category-img">
+                <img src="${d.img}" alt="${d.name}" loading="lazy">
+                <div class="category-overlay">
+                    <button class="btn btn-small btn-select-furniture" data-category="${d.cat}">Customize</button>
+                </div>
+            </div>
+            <div class="category-info">
+                <h3><i class="fas ${d.icon}"></i> ${d.name}</h3>
+                <p>${d.desc}</p>
+            </div>
+        </div>
+    `).join('');
+
+    grid.querySelectorAll('.btn-select-furniture').forEach(btn => {
+        btn.addEventListener('click', () => selectCategory(btn.dataset.category));
+    });
+
+    // Re-observe
+    grid.querySelectorAll('.category-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+}
+
+// Load website settings from Firestore
+async function loadSettings() {
+    try {
+        const docRef = doc(db, 'settings', 'business');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+
+            // Update contact info
+            if (data.whatsapp) {
+                const waLink = document.getElementById('contactWhatsapp');
+                if (waLink) {
+                    waLink.href = `https://wa.me/${data.whatsapp}`;
+                    waLink.textContent = data.whatsapp.startsWith('94') ? '+' + data.whatsapp : data.whatsapp;
+                }
+                const floating = document.getElementById('floatingWhatsapp');
+                if (floating) floating.href = `https://wa.me/${data.whatsapp}`;
+            }
+
+            if (data.phone) {
+                const phoneLink = document.getElementById('contactPhone');
+                if (phoneLink) {
+                    phoneLink.href = `tel:${data.phone}`;
+                    phoneLink.textContent = data.phone;
+                }
+                const footerPhone = document.getElementById('footerPhone');
+                if (footerPhone) footerPhone.textContent = data.phone;
+            }
+
+            if (data.email) {
+                const emailLink = document.getElementById('contactEmail');
+                if (emailLink) {
+                    emailLink.href = `mailto:${data.email}`;
+                    emailLink.textContent = data.email;
+                }
+                const footerEmail = document.getElementById('footerEmail');
+                if (footerEmail) footerEmail.textContent = data.email;
+            }
+
+            if (data.address) {
+                const addr = document.getElementById('contactAddress');
+                if (addr) addr.textContent = data.address;
+            }
+
+            // Update BUSINESS_WHATSAPP variable for order submissions
+            if (data.whatsapp) {
+                BUSINESS_WHATSAPP = String(data.whatsapp).replace(/[^0-9]/g, '');
+            }
+        }
+    } catch (error) {
+        console.error('Error loading settings:', error);
+        // Silently fail - use defaults
+    }
+}
+
+// Customer-side toast notifications
+function showCustomerToast(message, type = 'info') {
+    let container = document.querySelector('.customer-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'customer-toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `customer-toast ${type}`;
+
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-times-circle',
+        info: 'fa-info-circle'
+    };
+
+    toast.innerHTML = `
+        <i class="fas ${icons[type] || icons.info}"></i>
+        <span>${escapeHtml(message)}</span>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'toastFadeOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Set initial state
     updateProgressBar();
     updatePreview();
+
+    // Load data from Firestore
+    loadFurnitureFromFirestore();
+    loadSettings();
 
     // Add smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1051,5 +1372,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    console.log('GAJATHURU INTERIORS — Website loaded successfully');
+    console.log('GAJATHURU INTERIORS — Website loaded successfully with Firebase');
 });
+
+
+// ============================================
+// WINDOW EXPORTS (for HTML onclick handlers)
+// ============================================
+window.selectCategory = selectCategory;

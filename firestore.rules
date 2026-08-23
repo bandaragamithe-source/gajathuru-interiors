@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // IMPORTANT: Replace this value with the UID of your Firebase admin user.
+    // Firebase Console -> Authentication -> Users -> copy the admin UID.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == "ASbVBCbSuySadPYOIcK5o7eI3B32";
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['customerName', 'customerPhone', 'furnitureType', 'orderStatus'])
+        && data.customerName is string
+        && data.customerPhone is string
+        && data.furnitureType is string
+        && data.orderStatus is string;
+    }
+
+    function isValidFurniture(data) {
+      return data.keys().hasAll(['name', 'category', 'price'])
+        && data.name is string
+        && data.category is string
+        && data.price is number;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['businessName', 'whatsapp'])
+        && data.businessName is string
+        && data.whatsapp is string;
+    }
+
+    match /furniture/{furnitureId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidFurniture(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSettings(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow read: if isAdmin();
+      // Public customers may submit a new order, but cannot read or change orders.
+      allow create: if isValidOrder(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+  }
+}
