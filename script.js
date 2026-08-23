@@ -896,7 +896,9 @@ function generateWhatsAppLink() {
     sendWhatsAppBtn.href = '#';
 }
 
-// Override the WhatsApp button click to save order first
+// Save the order, but never leave the customer stuck before WhatsApp opens.
+// A blank tab is opened immediately from the user's click so browsers do not
+// block WhatsApp as a popup after asynchronous Firestore work finishes.
 sendWhatsAppBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
@@ -907,62 +909,73 @@ sendWhatsAppBtn.addEventListener('click', async (e) => {
         return;
     }
 
+    // Build WhatsApp URL BEFORE awaiting Firebase so the click remains user-initiated.
+    const message = buildWhatsAppMessage();
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappNumber = String(BUSINESS_WHATSAPP || '94789720335').replace(/[^0-9]/g, '');
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    // Pre-open a tab immediately. This avoids Chrome/Safari popup blocking after await/setTimeout.
+    let whatsappWindow = null;
+    try {
+        whatsappWindow = window.open('about:blank', '_blank');
+    } catch (_) {
+        whatsappWindow = null;
+    }
+
     // Show saving overlay
     const overlay = document.createElement('div');
     overlay.className = 'order-saving-overlay';
     overlay.innerHTML = '<div class="spinner"></div><p>Saving your order...</p>';
     document.body.appendChild(overlay);
 
+    const orderPayload = {
+        customerName: orderData.fullName.trim(),
+        customerPhone: orderData.phone.trim(),
+        customerEmail: (orderData.email || '').trim(),
+        customerAddress: orderData.address.trim(),
+        customerCity: orderData.city.trim(),
+        furnitureType: orderData.furniture || '',
+        width: orderData.width || '',
+        height: orderData.height || '',
+        depth: orderData.depth || '',
+        unit: orderData.unit || 'ft',
+        material: orderData.material || '',
+        color: orderData.color || '',
+        customColor: orderData.customColor || '',
+        additionalFeatures: orderData.features || {},
+        customerNotes: (orderData.notes || '').trim(),
+        referenceImageUploaded: !!orderData.referenceImage,
+        orderStatus: 'New',
+        createdAt: serverTimestamp()
+    };
+
+    let saved = false;
     try {
-        // Build the order object
-        const orderPayload = {
-            customerName: orderData.fullName.trim(),
-            customerPhone: orderData.phone.trim(),
-            customerEmail: orderData.email.trim() || '',
-            customerAddress: orderData.address.trim(),
-            customerCity: orderData.city.trim(),
-            furnitureType: orderData.furniture || '',
-            width: orderData.width || '',
-            height: orderData.height || '',
-            depth: orderData.depth || '',
-            unit: orderData.unit || 'ft',
-            material: orderData.material || '',
-            color: orderData.color || '',
-            customColor: orderData.customColor || '',
-            additionalFeatures: orderData.features || {},
-            customerNotes: orderData.notes.trim() || '',
-            referenceImageUploaded: !!orderData.referenceImage,
-            orderStatus: 'New',
-            createdAt: serverTimestamp()
-        };
-
-        // Save to Firestore
-        await addDoc(collection(db, 'orders'), orderPayload);
-
-        // Get WhatsApp number from settings or fallback
-        const settingsDoc = await getDoc(doc(db, 'settings', 'business'));
-        let whatsappNumber = BUSINESS_WHATSAPP;
-        if (settingsDoc.exists() && settingsDoc.data().whatsapp) {
-            whatsappNumber = settingsDoc.data().whatsapp;
-        }
-
-        // Build and open WhatsApp message
-        const message = buildWhatsAppMessage();
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-
-        showCustomerToast('Order saved successfully! Opening WhatsApp...', 'success');
-
-        // Small delay to show toast
-        setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
-            overlay.remove();
-        }, 800);
-
+        // Do not allow a slow/offline Firestore connection to trap the customer forever.
+        await Promise.race([
+            addDoc(collection(db, 'orders'), orderPayload),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('ORDER_SAVE_TIMEOUT')), 8000))
+        ]);
+        saved = true;
     } catch (error) {
         console.error('Error saving order:', error);
+    } finally {
         overlay.remove();
-        showCustomerToast('Error saving order. Please try again.', 'error');
+    }
+
+    if (saved) {
+        showCustomerToast('Order saved successfully! Opening WhatsApp...', 'success');
+    } else {
+        showCustomerToast('Opening WhatsApp. The online order record could not be saved.', 'error');
+    }
+
+    // Navigate the tab that was opened directly by the user's click.
+    if (whatsappWindow && !whatsappWindow.closed) {
+        whatsappWindow.location.href = whatsappUrl;
+    } else {
+        // Fallback for strict popup blockers: open WhatsApp in the current tab.
+        window.location.href = whatsappUrl;
     }
 });
 
