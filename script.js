@@ -295,6 +295,10 @@ function validateCurrentStep() {
     }
 
     if (currentStep === 6) {
+        // Mobile browsers may autofill/restore fields without firing input events.
+        // Always read the current visible form values before validating.
+        syncCustomerDetailsFromForm();
+
         // Validate phone number format
         const phone = document.getElementById('phone');
         if (phone.value && !/^\+?[0-9\s\-]{7,15}$/.test(phone.value.replace(/\s/g, ''))) {
@@ -446,6 +450,22 @@ document.getElementById('notes').addEventListener('input', function() {
 
 function updateOrderData(key, value) {
     orderData[key] = value;
+}
+
+function syncCustomerDetailsFromForm() {
+    const fullNameEl = document.getElementById('fullName');
+    const phoneEl = document.getElementById('phone');
+    const emailEl = document.getElementById('email');
+    const addressEl = document.getElementById('address');
+    const cityEl = document.getElementById('city');
+    const notesEl = document.getElementById('notes');
+
+    orderData.fullName = fullNameEl ? fullNameEl.value.trim() : '';
+    orderData.phone = phoneEl ? phoneEl.value.trim() : '';
+    orderData.email = emailEl ? emailEl.value.trim() : '';
+    orderData.address = addressEl ? addressEl.value.trim() : '';
+    orderData.city = cityEl ? cityEl.value.trim() : '';
+    orderData.notes = notesEl ? notesEl.value.trim() : '';
 }
 
 // ============================================
@@ -930,31 +950,56 @@ function generateWhatsAppLink() {
 sendWhatsAppBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
+    // Always sync the visible customer form first. Mobile autofill/cache may not fire input events.
+    syncCustomerDetailsFromForm();
+
     // Validate required fields one more time
     if (!orderData.fullName || !orderData.phone || !orderData.address || !orderData.city) {
-        showCustomerToast('Please fill in all required customer details.', 'error');
         goToStep(6);
+        const requiredCustomerFields = [
+            ['fullName', orderData.fullName],
+            ['phone', orderData.phone],
+            ['address', orderData.address],
+            ['city', orderData.city]
+        ];
+        const missing = requiredCustomerFields.find(([, value]) => !value);
+        if (missing) {
+            const missingEl = document.getElementById(missing[0]);
+            if (missingEl) {
+                missingEl.style.borderColor = '#e74c3c';
+                setTimeout(() => missingEl.focus(), 50);
+            }
+        }
+        showCustomerToast('Please fill in all required customer details.', 'error');
         return;
     }
 
-    // Build WhatsApp URL BEFORE awaiting Firebase so the click remains user-initiated.
+    // Build the WhatsApp link and open it IMMEDIATELY from the user's click.
+    // This makes WhatsApp independent from Firebase/Firestore and avoids popup blockers.
     const message = buildWhatsAppMessage();
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = String(BUSINESS_WHATSAPP || '94789720335').replace(/[^0-9]/g, '');
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-    // Pre-open a tab immediately. This avoids Chrome/Safari popup blocking after await/setTimeout.
-    let whatsappWindow = null;
+    let whatsappOpened = false;
     try {
-        whatsappWindow = window.open('about:blank', '_blank');
-    } catch (_) {
-        whatsappWindow = null;
+        const whatsappWindow = window.open(whatsappUrl, '_blank');
+        whatsappOpened = !!whatsappWindow;
+    } catch (error) {
+        console.warn('New-tab WhatsApp open was blocked:', error);
     }
 
-    // Show saving overlay
+    // Strict browsers/webviews may block a new tab. In that case redirect this tab now,
+    // while the click is still user initiated. Do not wait for Firebase first.
+    if (!whatsappOpened) {
+        window.location.assign(whatsappUrl);
+        return;
+    }
+
+    // WhatsApp is already opening. Saving the online record is now best-effort only.
     const overlay = document.createElement('div');
     overlay.className = 'order-saving-overlay';
-    overlay.innerHTML = '<div class="spinner"></div><p>Saving your order...</p>';
+    overlay.innerHTML = '<div class="spinner"></div><p>Saving your online order record...</p>';
     document.body.appendChild(overlay);
 
     const orderPayload = {
@@ -978,32 +1023,17 @@ sendWhatsAppBtn.addEventListener('click', async (e) => {
         createdAt: serverTimestamp()
     };
 
-    let saved = false;
     try {
-        // Do not allow a slow/offline Firestore connection to trap the customer forever.
         await Promise.race([
             addDoc(collection(db, 'orders'), orderPayload),
             new Promise((_, reject) => setTimeout(() => reject(new Error('ORDER_SAVE_TIMEOUT')), 8000))
         ]);
-        saved = true;
+        showCustomerToast('WhatsApp opened and the online order record was saved.', 'success');
     } catch (error) {
         console.error('Error saving order:', error);
+        showCustomerToast('WhatsApp opened. The online order record could not be saved.', 'error');
     } finally {
         overlay.remove();
-    }
-
-    if (saved) {
-        showCustomerToast('Order saved successfully! Opening WhatsApp...', 'success');
-    } else {
-        showCustomerToast('Opening WhatsApp. The online order record could not be saved.', 'error');
-    }
-
-    // Navigate the tab that was opened directly by the user's click.
-    if (whatsappWindow && !whatsappWindow.closed) {
-        whatsappWindow.location.href = whatsappUrl;
-    } else {
-        // Fallback for strict popup blockers: open WhatsApp in the current tab.
-        window.location.href = whatsappUrl;
     }
 });
 
