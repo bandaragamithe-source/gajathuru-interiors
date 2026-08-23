@@ -6,7 +6,7 @@ service cloud.firestore {
     // Firebase Console -> Authentication -> Users -> copy the admin UID.
     function isAdmin() {
       return request.auth != null
-        && request.auth.uid == "ASbVBCbSuySadPYOIcK5o7eI3B32";
+        && request.auth.uid == "PASTE_YOUR_ADMIN_UID_HERE";
     }
 
     function isValidOrder(data) {

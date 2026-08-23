@@ -309,11 +309,27 @@ function validateCurrentStep() {
 
 function enableNextButton(step) {
     const stepEl = formSteps[step - 1];
+    if (!stepEl) return;
     const nextBtn = stepEl.querySelector('.next-step');
     if (nextBtn) {
         nextBtn.disabled = false;
+        nextBtn.removeAttribute('disabled');
+        nextBtn.setAttribute('aria-disabled', 'false');
     }
 }
+
+// Safety sync: keep wizard navigation usable even if a browser keeps an old disabled state.
+function syncWizardNextButtons() {
+    const step1Btn = formSteps[0]?.querySelector('.next-step');
+    const step3Btn = formSteps[2]?.querySelector('.next-step');
+    const step4Btn = formSteps[3]?.querySelector('.next-step');
+
+    if (step1Btn) step1Btn.disabled = false;
+    if (step3Btn) step3Btn.disabled = false;
+    if (step4Btn) step4Btn.disabled = false;
+}
+
+syncWizardNextButtons();
 
 // ============================================
 // FORM INPUT HANDLERS
@@ -328,6 +344,18 @@ document.querySelectorAll('input[name="furniture"]').forEach(radio => {
         generateFeatures(this.value);
         enableNextButton(1);
     });
+});
+
+// Extra delegated fallback for furniture selection (helps on mobile and cached pages).
+document.addEventListener('change', (event) => {
+    if (event.target && event.target.matches('input[name="furniture"]')) {
+        const radio = event.target;
+        updateOrderData('furniture', radio.value);
+        updateOrderData('furnitureIcon', radio.dataset.icon || 'fa-couch');
+        generateFeatures(radio.value);
+        updatePreview();
+        enableNextButton(1);
+    }
 });
 
 // Size inputs
