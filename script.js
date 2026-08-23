@@ -6,7 +6,7 @@
 // ============================================
 // CONFIGURATION
 // ============================================
-const BUSINESS_WHATSAPP = "947XXXXXXXX"; // Replace with actual WhatsApp number
+const BUSINESS_WHATSAPP = "94789720335"; // Replace with actual WhatsApp number
 
 // ============================================
 // DOM ELEMENTS
